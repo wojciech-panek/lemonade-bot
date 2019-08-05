@@ -4,5 +4,5 @@ export const colors = {
 };
 
 export const fonts = {
-  arial: 'Arial',
+  main: "'Montserrat', sans-serif",
 };

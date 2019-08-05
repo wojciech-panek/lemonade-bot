@@ -7,13 +7,26 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'ramda';
 
 import { Home } from './home.component';
-import { selectLocalesLanguage } from '../../modules/locales';
+import {
+  HistoryActions,
+  selectHistoryIsLoading,
+  selectHistoryDeletedCount,
+  selectHistoryError,
+} from '../../modules/history';
 
 const mapStateToProps = createStructuredSelector({
-  language: selectLocalesLanguage,
+  isLoading: selectHistoryIsLoading,
+  deletedCount: selectHistoryDeletedCount,
+  error: selectHistoryError,
 });
 
-export const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+export const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      clearHistory: HistoryActions.clear,
+    },
+    dispatch
+  );
 
 export default compose(
   hot(module),

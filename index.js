@@ -3,12 +3,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { WebClient } = require('@slack/web-api');
 
-const tokens = [
-  'xoxp-2612359521-51100563574-650242558917-9b2c8fc9d19ecafac7098175ca2c8071',
-  'xoxp-2612359521-49396721797-638850536563-94822bd72b054c48356a11ce77d0f686',
-];
-// const channelId = 'GCN1Z9N91';
-const channelId = 'GLU8VEG7P';
+// const channelId = 'GLU8VEG7P';
+const channelId = 'GCN1Z9N91';
 const password = 'Lemonade321';
 
 const deleteMessage = async (message, client, user) => {
@@ -63,23 +59,30 @@ const clearHistory = async (req, res) => {
     return res.status(401).send({ status: 'error' });
   }
 
-  const deletedCounts = await Promise.all(
-    tokens.map(async token => {
-      const client = new WebClient(token);
-      const user = await client.auth.test();
+  try {
+    const deletedCounts = await Promise.all(
+      process.env.TOKENS.split(',').map(async token => {
+        const client = new WebClient(token);
+        const user = await client.auth.test();
 
-      const messages = await getMessages(client);
+        const messages = await getMessages(client);
 
-      const deletedMessages = await Promise.all(
-        messages.map(message => deleteMessage(message, client, user))
-      );
-      return Promise.resolve(deletedMessages.filter(value => value).length);
-    })
-  );
+        const deletedMessages = await Promise.all(
+          messages.map(message => deleteMessage(message, client, user))
+        );
+        return Promise.resolve(deletedMessages.filter(value => value).length);
+      })
+    );
 
-  const deletedSum = deletedCounts.reduce((prev, current) => prev + current, 0);
+    const deletedSum = deletedCounts.reduce(
+      (prev, current) => prev + current,
+      0
+    );
 
-  return res.send({ status: 'ok', deleted: deletedSum });
+    return res.send({ status: 'ok', deleted: deletedSum });
+  } catch (e) {
+    return res.status(500).send({ status: 'error' });
+  }
 };
 
 const app = express();
