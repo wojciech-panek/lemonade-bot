@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const { WebClient } = require('@slack/web-api');
 
 // const channelId = 'GLU8VEG7P';
-const channelId = 'GCN1Z9N91';
+const channelId = 'CNVGV1WD6';
 const password = 'Lemonade321';
 
 const deleteMessage = async (message, client, user) => {
